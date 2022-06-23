@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +27,7 @@ namespace Marvis.BookStore
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -37,15 +38,45 @@ namespace Marvis.BookStore
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseStaticFiles();
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WriteAsync("Hello from my first middleware");
+
+                await next();
+
+                await context.Response.WriteAsync("Hello from my first middleware response");
+
+            });
+
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WriteAsync("Hello from my second middleware");
+
+                await next();
+
+                await context.Response.WriteAsync("Hello from my second middleware response");
+            });
+
+            app.Use(async (context, next) =>
+            {
+                await context.Response.WriteAsync("Hello from my third middleware");
+                await next();
+
+            });
+
+            //app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
+                //endpoints.MapRazorPages();
             });
         }
     }
