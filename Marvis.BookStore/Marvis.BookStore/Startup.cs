@@ -23,7 +23,8 @@ namespace Marvis.BookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
+            //services.AddRazorPages();
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,31 +49,7 @@ namespace Marvis.BookStore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.Map("/", async context =>
-                {
-                    //if (env.IsDevelopment())
-                    //{
-                    //await context.Response.WriteAsync("Hello from dev");
-                    //}
-                    //else if (env.IsProduction())
-                    //{
-                    //    await context.Response.WriteAsync("Hello from prod");
-                    //}
-                    //else if (env.IsStaging())
-                    //{
-                    //    await context.Response.WriteAsync("Hello from stag");
-                    //}
-                    //else
-                    //await context.Response.WriteAsync(env.EnvironmentName);
-
-                    //Checking for the name of our custom environment
-                    if (env.IsEnvironment("Develop"))
-                    {
-                        await context.Response.WriteAsync("Hello from custom Name");
-                    }
-                    else
-                        await context.Response.WriteAsync(env.EnvironmentName);
-                });
+                endpoints.MapDefaultControllerRoute();
                 //endpoints.MapRazorPages();
             });
 
