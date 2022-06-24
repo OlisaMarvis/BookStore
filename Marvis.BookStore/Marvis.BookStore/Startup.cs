@@ -38,46 +38,53 @@ namespace Marvis.BookStore
                 app.UseExceptionHandler("/Error");
             }
 
-            app.Use(async (context, next) =>
-            {
-                await context.Response.WriteAsync("Hello from my first middleware");
-
-                await next();
-
-                await context.Response.WriteAsync("Hello from my first middleware response");
-
-            });
-
-            app.Use(async (context, next) =>
-            {
-                await context.Response.WriteAsync("Hello from my second middleware");
-
-                await next();
-
-                await context.Response.WriteAsync("Hello from my second middleware response");
-            });
-
-            app.Use(async (context, next) =>
-            {
-                await context.Response.WriteAsync("Hello from my third middleware");
-                await next();
-
-            });
+            app.UseRouting();
 
             //app.UseStaticFiles();
 
-            app.UseRouting();
+
 
             //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                endpoints.Map("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    //if (env.IsDevelopment())
+                    //{
+                    //await context.Response.WriteAsync("Hello from dev");
+                    //}
+                    //else if (env.IsProduction())
+                    //{
+                    //    await context.Response.WriteAsync("Hello from prod");
+                    //}
+                    //else if (env.IsStaging())
+                    //{
+                    //    await context.Response.WriteAsync("Hello from stag");
+                    //}
+                    //else
+                    //await context.Response.WriteAsync(env.EnvironmentName);
+
+                    //Checking for the name of our custom environment
+                    if (env.IsEnvironment("Develop"))
+                    {
+                        await context.Response.WriteAsync("Hello from custom Name");
+                    }
+                    else
+                        await context.Response.WriteAsync(env.EnvironmentName);
                 });
                 //endpoints.MapRazorPages();
             });
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.Map("/Marvis", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello Marvi);
+            //    });
+            //    //endpoints.MapRazorPages();
+            //});
+           
         }
     }
 }
