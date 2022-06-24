@@ -1,22 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Marvis.BookStore.Models;
+using Marvis.BookStore.Repository;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace Marvis.BookStore.Controllers
 {
     public class BookController : Controller
     {
-        public string GetAllBooks()
+        private readonly BookRepository _bookRepository = null;
+        public BookController()
         {
-            return "All books";
+            _bookRepository = new BookRepository();
+        }
+        public List<BookModel> GetAllBooks()
+        {
+            return _bookRepository.GetAllBooks();
         }
 
-        public string GetBook(int id)
+        public BookModel GetBook(int id)
         {
-            return $"book with id = {id}";
+            return _bookRepository.GetBookById(id);
         }
 
-        public string SearchBooks(string bookName, string authorName)
+        public List<BookModel> SearchBooks(string bookName, string authorName)
         {
-            return $"Book with name = {bookName} & Author = {authorName}";
+            return _bookRepository.SearchBook(bookName, authorName);
         }
     }
 }
