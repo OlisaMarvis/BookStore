@@ -24,7 +24,7 @@ namespace Marvis.BookStore
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddRazorPages();
-            services.AddControllers();
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,11 +41,11 @@ namespace Marvis.BookStore
 
             app.UseRouting();
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
 
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
