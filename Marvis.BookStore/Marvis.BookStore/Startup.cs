@@ -46,10 +46,10 @@ namespace Marvis.BookStore
             app.UseStaticFiles();
 
             //To use static files outside the root folder
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles"))
-            //});
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles"))
+            });
 
             app.UseAuthorization();
 
