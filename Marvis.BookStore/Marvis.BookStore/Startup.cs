@@ -43,8 +43,6 @@ namespace Marvis.BookStore
 
             app.UseStaticFiles();
 
-
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
