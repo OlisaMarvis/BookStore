@@ -51,18 +51,11 @@ namespace Marvis.BookStore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
-                //endpoints.MapRazorPages();
+                //endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllerRoute(
+                    name: "Default",
+                    pattern: "bookApp/{controller=Home}/{action=Index}/{id?}");
             });
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.Map("/Marvis", async context =>
-            //    {
-            //        await context.Response.WriteAsync("Hello Marvi);
-            //    });
-            //    //endpoints.MapRazorPages();
-            //});
            
         }
     }
