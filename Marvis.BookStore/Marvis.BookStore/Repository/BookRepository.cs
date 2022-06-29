@@ -27,11 +27,12 @@ namespace Marvis.BookStore.Repository
         {
             return new List<BookModel>()
             {
-                new BookModel() { Id = 1, Title = "MVC", Author = "Olisa" },
-                new BookModel() { Id = 2, Title = "MVC", Author = "Olisa" },
-                new BookModel() { Id = 3, Title = "C#", Author = "Marvis" },
-                new BookModel() { Id = 4, Title = "Java", Author = "OlisaMarvis" },
-                new BookModel() { Id = 5, Title = "Php", Author = "OlisaMarvis" },
+                new BookModel() { Id = 1, Title = "MVC", Author = "Olisa", Description = "This is the description for the MVC book", Category="Programming", Language="English", Totalpages=134 },
+                new BookModel() { Id = 2, Title = "Dot Net Core", Author = "Olisa", Description = "This is the description for the Dot Net Core book", Category="framework", Language="Chinese", Totalpages=567 },
+                new BookModel() { Id = 3, Title = "C#", Author = "Marvis", Description = "This is the description for the C# book", Category="Developer", Language="Hindi", Totalpages=897 },
+                new BookModel() { Id = 4, Title = "Java", Author = "OlisaMarvis", Description = "This is the description for the Java book", Category="Concept", Language="English", Totalpages=564 },
+                new BookModel() { Id = 5, Title = "Php", Author = "OlisaMarvis", Description = "This is the description for the PHP book", Category="Programming", Language="English", Totalpages=100 },
+                new BookModel() { Id = 5, Title = "Azure DevOps", Author = "OlisaMarvis", Description = "This is the description for the Azure DevOps book", Category="DevOps", Language="English", Totalpages=800 },
             };
         }
     }

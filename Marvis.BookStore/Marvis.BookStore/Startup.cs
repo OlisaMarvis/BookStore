@@ -25,8 +25,10 @@ namespace Marvis.BookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddRazorPages();
             services.AddControllersWithViews();
+#if DEBUG
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+#endif
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,13 +46,6 @@ namespace Marvis.BookStore
             app.UseRouting();
 
             app.UseStaticFiles();
-
-            //To use static files outside the root folder
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
-                RequestPath = "/MyStaticFiles"
-            });
 
             app.UseAuthorization();
 
