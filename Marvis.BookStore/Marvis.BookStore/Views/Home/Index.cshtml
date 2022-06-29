@@ -1,14 +1,11 @@
 ﻿@{ 
-    dynamic data = ViewBag.Data;
+    ViewData["Title"] = "Home";
 }
 <section class="jumbotron text-center">
     <div class="container">
-        <h1>Welcome to Bookstore @ViewBag.Title</h1>
+        <h1>Welcome to Bookstore @ViewData["property1"]</h1>
+        
         <p class="lead text-muted">
-            @data.Id @data.Name <br />
-            Id = @ViewBag.Type.Id <br />
-            Name = @ViewBag.Type.Author
-
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla sint pariatur illo voluptatum temporibus ipsa sed excepturi provident eligendi dicta!
         </p>
         <p>
@@ -69,7 +66,7 @@
 
 @section scripts {
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //alert("document is ready");
         })
     </script>

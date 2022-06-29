@@ -7,15 +7,9 @@ namespace Marvis.BookStore.Controllers
     {
         public ViewResult Index()
         {
-            ViewBag.Title = "Marvis";
+            ViewData["property1"] = "Olisa Marvis";
 
-            dynamic data = new ExpandoObject();
-            data.Id = 1;
-            data.Name = "Marvis";
-
-            ViewBag.Data = data;
-
-            ViewBag.Type = new BookModel() { Id = 5, Author = "This is author" };
+            ViewData["book"] = new BookModel() { Author = "Marvis", Id = 1 };
             return View();
             //return View("TempView/MarvisTemp.cshtml");
         }
