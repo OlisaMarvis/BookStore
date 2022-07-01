@@ -28,6 +28,7 @@ namespace Marvis.BookStore.Repository
                 CreatedOn = DateTime.UtcNow,
                 Description = model.Description,
                 Title = model.Title,
+                Language = model.Language,
                 Totalpages = model.Totalpages.HasValue ? model.Totalpages.Value : 0,
                 UpdatedOn = DateTime.UtcNow
             };

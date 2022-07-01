@@ -33,9 +33,13 @@ namespace Marvis.BookStore.Controllers
 
         public ViewResult AddNewBook(bool isSuccess = false, int bookId = 0)
         {
+            var model = new BookModel()
+            {
+                Language = "English"
+            };
             ViewBag.IsSuccess = isSuccess;
             ViewBag.BookId = bookId;
-            return View();
+            return View(model);
         }
 
         [HttpPost]
@@ -54,6 +58,8 @@ namespace Marvis.BookStore.Controllers
 
             //To write your custom error messages
             ModelState.AddModelError("", "Custom error message");
+            ModelState.AddModelError("", "Another Custom error message");
+
             return View();
         }
     }
