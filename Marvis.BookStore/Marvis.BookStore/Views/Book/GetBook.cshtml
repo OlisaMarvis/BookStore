@@ -50,10 +50,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p class="description">
-                        This book will cover all details about ASP.Net Core MVC.
-                        This book is designed specially for freshers to pro knowledge.
-                        After reading this book you will be able to develop fully functional
-                        applications using asp.net mvc framework.
+                        @Model.Description
                     </p>
                 </div>
             </div>
@@ -77,7 +74,7 @@
 
         <hr />
 
-        <div class="py-5 bg-light">
+        <div class="py-5 bg-light" id="similarBooks">
             <h3 class="h3">Similar books</h3>
             <div class="row">
                 @for (int i = 0; i < 5; i++)
