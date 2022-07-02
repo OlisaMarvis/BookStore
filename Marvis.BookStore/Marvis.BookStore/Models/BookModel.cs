@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Marvis.BookStore.Enums;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Marvis.BookStore.Models
@@ -21,6 +23,10 @@ namespace Marvis.BookStore.Models
         public string Description { get; set; }
         [Required(ErrorMessage = "Please choose the language of your book")]
         public string Language { get; set; }
+
+        [Required(ErrorMessage = "Please choose the languages of your book")]
+        public LanguageEnum LanguageEnum { get; set; }
+
         [Required(ErrorMessage = "Please enter the total pages")]
         [Display(Name = "Total pages of book")]
         public int? Totalpages { get; set; }
