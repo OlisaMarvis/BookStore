@@ -17,7 +17,7 @@ namespace Marvis.BookStore.Models
         public string Title { get; set; }
         [Required(ErrorMessage = "Please enter the author name")]
         public string Author { get; set; }
-        [StringLength(500, MinimumLength = 30)]
+        [StringLength(500, MinimumLength = 3)]
         public string Description { get; set; }
         [Required(ErrorMessage = "Please choose the language of your book")]
         public string Language { get; set; }

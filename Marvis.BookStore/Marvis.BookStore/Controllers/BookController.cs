@@ -1,6 +1,7 @@
 ﻿using Marvis.BookStore.Models;
 using Marvis.BookStore.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -35,8 +36,12 @@ namespace Marvis.BookStore.Controllers
         {
             var model = new BookModel()
             {
-                Language = "English"
+                Language = "2"
             };
+
+            ViewBag.Language = new SelectList(GetLanguage(), "Id", "Text");
+
+
             ViewBag.IsSuccess = isSuccess;
             ViewBag.BookId = bookId;
             return View(model);
@@ -56,11 +61,24 @@ namespace Marvis.BookStore.Controllers
             //ViewBag.IsSuccess = false;
             //ViewBag.BookId = 0;
 
+            ViewBag.Language = new SelectList(GetLanguage(), "Id", "Text");
+
+
             //To write your custom error messages
-            ModelState.AddModelError("", "Custom error message");
-            ModelState.AddModelError("", "Another Custom error message");
+            //ModelState.AddModelError("", "Custom error message");
+            //ModelState.AddModelError("", "Another Custom error message");
 
             return View();
+        }
+
+        private List<LanguageModel> GetLanguage()
+        {
+            return new List<LanguageModel>()
+            {
+                new LanguageModel(){ Id = 1, Text = "Igbo"},
+                new LanguageModel(){ Id = 2, Text = "English"},
+                new LanguageModel(){ Id = 3, Text = "French"},
+            };
         }
     }
 }

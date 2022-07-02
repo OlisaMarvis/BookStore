@@ -21,11 +21,8 @@
 
     <div class="form-group mb-3">
         <label asp-for="Language" class="control-label"></label>
-        <select asp-for="Language" class="form-control">
-            <option value="">Please choose book language</option>
-            <option value="Igbo">Igbo (Native Language)</option>
-            <option value="English">English (Global Language)</option>
-            <option value="French">French (For my custom message)</option>
+        <select asp-for="Language" class="form-control" asp-items="ViewBag.Language">
+            <option value="">Please choose your language</option>
         </select>
         <span asp-validation-for="Language" class="text-danger"></span>
     </div>
