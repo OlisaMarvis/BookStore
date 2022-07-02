@@ -37,14 +37,16 @@ namespace Marvis.BookStore.Controllers
         {
             var model = new BookModel()
             {
-                Language = "2"
+                //Language = "2"
             };
 
-            ViewBag.Language = GetLanguage().Select(x => new SelectListItem()
+            ViewBag.Language = new List<SelectListItem>()
             {
-                Text = x.Text,
-                Value = x.Id.ToString()
-            }).ToList();
+                new SelectListItem(){Text = "Igbo", Value = "1"},
+                new SelectListItem(){Text = "English", Value = "2", Disabled = true},
+                new SelectListItem(){Text = "Yoruba", Value = "3", Selected = true},
+                new SelectListItem(){Text = "Hausa", Value = "4", Disabled = true},
+            };
 
 
             ViewBag.IsSuccess = isSuccess;
