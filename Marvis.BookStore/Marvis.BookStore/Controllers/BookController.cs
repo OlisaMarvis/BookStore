@@ -3,6 +3,7 @@ using Marvis.BookStore.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Marvis.BookStore.Controllers
@@ -39,7 +40,11 @@ namespace Marvis.BookStore.Controllers
                 Language = "2"
             };
 
-            ViewBag.Language = new SelectList(GetLanguage(), "Id", "Text");
+            ViewBag.Language = GetLanguage().Select(x => new SelectListItem()
+            {
+                Text = x.Text,
+                Value = x.Id.ToString()
+            }).ToList();
 
 
             ViewBag.IsSuccess = isSuccess;
