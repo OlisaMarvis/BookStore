@@ -40,12 +40,18 @@ namespace Marvis.BookStore.Controllers
                 //Language = "2"
             };
 
+            var group1 = new SelectListGroup() { Name = "Group 1" };
+            var group2 = new SelectListGroup() { Name = "Group 2", Disabled = true };
+            var group3 = new SelectListGroup() { Name = "Group 3" };
+
             ViewBag.Language = new List<SelectListItem>()
             {
-                new SelectListItem(){Text = "Igbo", Value = "1"},
-                new SelectListItem(){Text = "English", Value = "2", Disabled = true},
-                new SelectListItem(){Text = "Yoruba", Value = "3", Selected = true},
-                new SelectListItem(){Text = "Hausa", Value = "4", Disabled = true},
+                new SelectListItem(){Text = "Igbo", Value = "1", Group = group1},
+                new SelectListItem(){Text = "English", Value = "2", Group = group2},
+                new SelectListItem(){Text = "Yoruba", Value = "3", Group = group3},
+                new SelectListItem(){Text = "Hausa", Value = "4", Group = group1},
+                new SelectListItem(){Text = "Efik", Value = "5", Group = group2},
+                new SelectListItem(){Text = "Igala", Value = "6", Group = group3},
             };
 
 
