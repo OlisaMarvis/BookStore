@@ -1,8 +1,13 @@
 ﻿using Marvis.BookStore.Models;
 using Marvis.BookStore.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,10 +15,21 @@ namespace Marvis.BookStore.Controllers
 {
     public class BookController : Controller
     {
-        private readonly BookRepository _bookRepository = null;
-        public BookController(BookRepository bookRepository)
+        //Creating the field
+        private readonly IBookRepository _bookRepository = null;
+        private readonly ILanguageRepository _languageRepository = null;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        //Injecting the service into the constructor, the service will be resolved by 
+        //the ASP.NET Core framework
+        public BookController(IBookRepository bookRepository,
+            ILanguageRepository languageRepository,
+            IWebHostEnvironment webHostEnvironment)
         {
+            //Here we get the instance of the service class
             _bookRepository = bookRepository;
+            _languageRepository = languageRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
         public async Task<ViewResult> GetAllBooks()
         {
@@ -33,23 +49,10 @@ namespace Marvis.BookStore.Controllers
             return _bookRepository.SearchBook(bookName, authorName);
         }
 
-        public ViewResult AddNewBook(bool isSuccess = false, int bookId = 0)
+        [Authorize]
+        public async Task<ViewResult> AddNewBook(bool isSuccess = false, int bookId = 0)
         {
-            var model = new BookModel()
-            {
-                //Language = "2"
-            };
-
-            //ViewBag.Language = new List<SelectListItem>()
-            //{
-            //    new SelectListItem(){Text = "Igbo", Value = "1"},
-            //    new SelectListItem(){Text = "English", Value = "2"},
-            //    new SelectListItem(){Text = "Yoruba", Value = "3"},
-            //    new SelectListItem(){Text = "Hausa", Value = "4"},
-            //    new SelectListItem(){Text = "Efik", Value = "5"},
-            //    new SelectListItem(){Text = "Igala", Value = "6"},
-            //};
-
+            var model = new BookModel();
 
             ViewBag.IsSuccess = isSuccess;
             ViewBag.BookId = bookId;
@@ -61,41 +64,56 @@ namespace Marvis.BookStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (bookModel.CoverPhoto != null)
+                {
+                    string folder = "books/cover/";
+                    bookModel.CoverImageUrl = await UploadImage(folder, bookModel.CoverPhoto);
+                }
+
+                if (bookModel.GalleryFiles != null)
+                {
+                    string folder = "books/gallery/";
+
+                    bookModel.Gallery = new List<GalleryModel>();
+
+                    foreach(var file in bookModel.GalleryFiles)
+                    {
+                        var gallery = new GalleryModel()
+                        {
+                            Name = file.FileName,
+                            URL = await UploadImage(folder, file)
+                        };
+                        bookModel.Gallery.Add(gallery);
+                    }
+                   
+                }
+
+                if (bookModel.BookPdf != null)
+                {
+                    string folder = "books/pdf/";
+                    bookModel.BookPdfUrl = await UploadImage(folder, bookModel.BookPdf);
+                }
+
                 int id = await _bookRepository.AddNewBook(bookModel);
                 if (id > 0)
                 {
                     return RedirectToAction(nameof(AddNewBook), new { isSuccess = true, bookId = id });
                 }
             }
-            //ViewBag.IsSuccess = false;
-            //ViewBag.BookId = 0;
-
-            //ViewBag.Language = new List<SelectListItem>()
-            //{
-            //    new SelectListItem(){Text = "Igbo", Value = "1"},
-            //    new SelectListItem(){Text = "English", Value = "2"},
-            //    new SelectListItem(){Text = "Yoruba", Value = "3"},
-            //    new SelectListItem(){Text = "Hausa", Value = "4"},
-            //    new SelectListItem(){Text = "Efik", Value = "5"},
-            //    new SelectListItem(){Text = "Igala", Value = "6"},
-            //};
-
-
-            //To write your custom error messages
-            //ModelState.AddModelError("", "Custom error message");
-            //ModelState.AddModelError("", "Another Custom error message");
 
             return View();
         }
 
-        private List<LanguageModel> GetLanguage()
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
         {
-            return new List<LanguageModel>()
-            {
-                new LanguageModel(){ Id = 1, Text = "Igbo"},
-                new LanguageModel(){ Id = 2, Text = "English"},
-                new LanguageModel(){ Id = 3, Text = "French"},
-            };
+           
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return "/" + folderPath;
         }
     }
 }

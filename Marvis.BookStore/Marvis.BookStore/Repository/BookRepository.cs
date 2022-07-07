@@ -1,6 +1,7 @@
 ﻿using Marvis.BookStore.Data;
 using Marvis.BookStore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,15 @@ using System.Threading.Tasks;
 
 namespace Marvis.BookStore.Repository
 {
-    public class BookRepository
+    public class BookRepository : IBookRepository
     {
         private readonly BookStoreContext _context = null;
+        private readonly IConfiguration _configuration;
 
-        //public BookRepository()
-        //{
-        //}
-
-        public BookRepository(BookStoreContext context)
+        public BookRepository(BookStoreContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public async Task<int> AddNewBook(BookModel model)
         {
@@ -28,10 +27,21 @@ namespace Marvis.BookStore.Repository
                 CreatedOn = DateTime.UtcNow,
                 Description = model.Description,
                 Title = model.Title,
-                Language = model.Language,
+                LanguageId = model.LanguageId,
                 Totalpages = model.Totalpages.HasValue ? model.Totalpages.Value : 0,
-                UpdatedOn = DateTime.UtcNow
+                UpdatedOn = DateTime.UtcNow,
+                CoverImageUrl = model.CoverImageUrl,
+                BookPdfUrl = model.BookPdfUrl
             };
+            newBook.bookGallery = new List<BookGallery>();
+            foreach (var file in model.Gallery)
+            {
+                newBook.bookGallery.Add(new BookGallery()
+                {
+                    Name = file.Name,
+                    URL = file.URL
+                });
+            }
             //Mapping to database
             await _context.Books.AddAsync(newBook);
             //To hit the database
@@ -41,68 +51,75 @@ namespace Marvis.BookStore.Repository
         }
         public async Task<List<BookModel>> GetAllBooks()
         {
-            var books = new List<BookModel>();
-            var allbooks = await _context.Books.ToListAsync();
-            if (allbooks?.Any() == true)
-            {
-                foreach (var book in allbooks)
-                {
-                    books.Add(new BookModel()
-                    {
-                        Author = book.Author,
-                        Category = book.Category,
-                        Description = book.Description,
-                        Id = book.Id,
-                        Language = book.Language,
-                        Title = book.Title,
-                        Totalpages = book.Totalpages
-                    });
-                }
-            }
-            return DataSource();
-        }
-        public async Task<BookModel> GetBookById(int id)
-        {
-            //Return details of a book
-            var book = await _context.Books.FindAsync(id);
-            if (book != null)
-            {
-                var bookDetails = new BookModel()
+            return await _context.Books
+                .Select(book => new BookModel()
                 {
                     Author = book.Author,
                     Category = book.Category,
                     Description = book.Description,
                     Id = book.Id,
-                    Language = book.Language,
+                    LanguageId = book.LanguageId,
+                    Language = book.Language.Name,
                     Title = book.Title,
-                    Totalpages = book.Totalpages
-                };
-                return bookDetails;
-            }
-            return null;
+                    Totalpages = book.Totalpages,
+                    CoverImageUrl = book.CoverImageUrl
+                }).ToListAsync();
+        }
 
-             //_context.Books.Where(x => x.Id == id).FirstOrDefault();
+        public async Task<List<BookModel>> GetTopBooksAsync(int count)
+        {
+            return await _context.Books
+                .Select(book => new BookModel()
+                {
+                    Author = book.Author,
+                    Category = book.Category,
+                    Description = book.Description,
+                    Id = book.Id,
+                    LanguageId = book.LanguageId,
+                    Language = book.Language.Name,
+                    Title = book.Title,
+                    Totalpages = book.Totalpages,
+                    CoverImageUrl = book.CoverImageUrl
+                }).Take(count).ToListAsync();
+        }
+        public async Task<BookModel> GetBookById(int id)
+        {
+            //Return details of a book
+            return await _context.Books.Where(x => x.Id == id)
+                 .Select(book => new BookModel()
+                 {
+                     Author = book.Author,
+                     Category = book.Category,
+                     Description = book.Description,
+                     Id = book.Id,
+                     LanguageId = book.LanguageId,
+                     Language = book.Language.Name,
+                     Title = book.Title,
+                     Totalpages = book.Totalpages,
+                     CoverImageUrl = book.CoverImageUrl,
+                     Gallery = book.bookGallery.Select(g => new GalleryModel()
+                     {
+                         Id = g.Id,
+                         Name = g.Name,
+                         URL = g.URL
+                     }).ToList(),
+                     BookPdfUrl = book.BookPdfUrl
+                 }).FirstOrDefaultAsync();
+            //_context.Books.Where(x => x.Id == id).FirstOrDefault();
         }
 
         public List<BookModel> SearchBook(string title, string authorName)
         {
             //return DataSource().Where(x => x.Title == title && x.Author == authorName).ToList(); OR use
 
-            return DataSource().Where(x => x.Title.Contains(title) && x.Author.Contains(authorName)).ToList();
+            return null;
 
         }
 
-        private List<BookModel> DataSource()
+        public string GetAppName()
         {
-            return new List<BookModel>()
-            {
-                new BookModel() { Id = 1, Title = "MVC", Author = "Olisa", Description = "This is the description for the MVC book", Category="Programming", Language="English", Totalpages=134 },
-                new BookModel() { Id = 2, Title = "Dot Net Core", Author = "Olisa", Description = "This is the description for the Dot Net Core book", Category="framework", Language="Chinese", Totalpages=567 },
-                new BookModel() { Id = 3, Title = "C#", Author = "Marvis", Description = "This is the description for the C# book", Category="Developer", Language="Hindi", Totalpages=897 },
-                new BookModel() { Id = 4, Title = "Java", Author = "OlisaMarvis", Description = "This is the description for the Java book", Category="Concept", Language="English", Totalpages=564 },
-                new BookModel() { Id = 5, Title = "Php", Author = "OlisaMarvis", Description = "This is the description for the PHP book", Category="Programming", Language="English", Totalpages=100 },
-                new BookModel() { Id = 5, Title = "Azure DevOps", Author = "OlisaMarvis", Description = "This is the description for the Azure DevOps book", Category="DevOps", Language="English", Totalpages=800 },
-            };
+            return _configuration["AppName"];
         }
+
     }
 }

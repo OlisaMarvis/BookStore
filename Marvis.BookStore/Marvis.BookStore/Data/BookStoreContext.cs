@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Marvis.BookStore.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Marvis.BookStore.Data
 {
-    public class BookStoreContext : DbContext
+    public class BookStoreContext : IdentityDbContext<ApplicationUser>
     {
         public BookStoreContext(DbContextOptions<BookStoreContext> options)
             : base(options)
@@ -11,5 +13,9 @@ namespace Marvis.BookStore.Data
         }
 
         public DbSet<Books> Books { get; set; }
+
+        public DbSet<BookGallery> BookGallery { get; set; }
+
+        public DbSet<Language> Language { get; set; }
     }
 }
