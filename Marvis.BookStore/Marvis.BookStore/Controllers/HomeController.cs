@@ -4,7 +4,9 @@ using Marvis.BookStore.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Dynamic;
+using System.Threading.Tasks;
 
 namespace Marvis.BookStore.Controllers
 {
@@ -15,16 +17,19 @@ namespace Marvis.BookStore.Controllers
         private readonly IOptionsSnapshot<NewBookAlertConfig> newBookAlertconfiguration;
         private readonly IMessageRepository _messageRepository;
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
         public HomeController(IOptionsSnapshot<NewBookAlertConfig> newBookAlertconfiguration, 
             IMessageRepository messageRepository, 
-            IUserService userService)
+            IUserService userService,
+            IEmailService emailService)
         {
             _newBookAlertconfiguration = newBookAlertconfiguration.Get("InternalBook");
             _thirdPartyBookconfiguration = newBookAlertconfiguration.Get("ThirdPartyBook");
             this.newBookAlertconfiguration = newBookAlertconfiguration;
             _messageRepository = messageRepository;
             _userService = userService;
+            _emailService = emailService;
         }
         //[ViewData]
         //public string CustomProperty { get; set; }
@@ -32,11 +37,23 @@ namespace Marvis.BookStore.Controllers
         //public string Title { get; set; }
         //[ViewData]
         //public BookModel Book { get; set; }
-        public ViewResult Index()
+        public async Task<ViewResult> Index()
         {
+
+            //UserEmailOptions options = new UserEmailOptions()
+            //{
+            //    ToEmails = new List<string>() { "olisamarvis@gmail.com" },
+            //    PlaceHolders = new List<KeyValuePair<string, string>>()
+            //    {
+            //        new KeyValuePair<string, string>("{{UserName}}", "Olisa")
+            //    }
+            //};
+            //await _emailService.SendTestEmail(options);
+
             //Title = "Home page from controller";
             //CustomProperty = "Custom value";
             //Book = new BookModel() { Id = 1, Title = "Asp.Net Core Tutorial" };
+
             var userId = _userService.GetUserId();
             var isLoggedIn = _userService.IsAuthenticated();
             bool isDisplay = _newBookAlertconfiguration.DisplayNewBookAlert;
