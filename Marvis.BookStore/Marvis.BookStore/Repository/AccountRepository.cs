@@ -82,7 +82,7 @@ namespace Marvis.BookStore.Repository
                 PlaceHolders = new List<KeyValuePair<string, string>>()
                 {
                     new KeyValuePair<string, string>("{{UserName}}", user.FirstName),
-                    new KeyValuePair<string, string>("{{Link}}", 
+                    new KeyValuePair<string, string>("{{Link}}",
                     string.Format(appDomain + confirmationLink, user.Id, token))
 
                 }

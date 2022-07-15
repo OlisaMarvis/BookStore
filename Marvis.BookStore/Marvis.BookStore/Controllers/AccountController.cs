@@ -116,11 +116,11 @@ namespace Marvis.BookStore.Controllers
             {
                 token = token.Replace(' ', '+');
                 var result = await _accountRepository.ConfirmEmailAsync(uid, token);
-                if (result.Succeeded)
+                if (result.Succeeded == true)
                 {
                     ViewBag.IsSuccess = true;
                 }
-               
+
             }
             return View();
         }

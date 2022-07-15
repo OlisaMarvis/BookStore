@@ -2,6 +2,6 @@
 {
     public class EmailConfirmModel
     {
-
+        public string Email { get; set; }          
     }
 }
